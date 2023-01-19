@@ -3,20 +3,37 @@
 namespace App\Services\Integration;
 
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class IbgeRestIntegrationService
 {
+    public function getUriStates(): string
+    {
+        return config('ibge.integration.host') . config('ibge.integration.states');
+    }
+
+    public function getUriCities($state): string
+    {
+        return config('ibge.integration.host') . config('ibge.integration.prefix') . "/" . $state . config('ibge.integration.cities');
+    }
+
     /**
      * Retorna todos os estados brasileiros
      *
-     * @return array
      */
     public function getStates()
     {
-        $uri = env('IBGE_REST_INTEGRATION_HOST', 'http://servicodados.ibge.gov.br/api/v1/') . '/localidades/estados';
-        $request = Http::get($uri);
+        $uri = $this->getUriStates();
 
-        return $request->json();
+        echo $uri;
+
+        try {
+            $request = Http::get($uri);
+            return $request->json();
+        }
+        catch (HttpException $e){
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -25,11 +42,16 @@ class IbgeRestIntegrationService
      * @param int $stateIbgeId
      * @return mixed
      */
-    public function getCitiesByState(int $stateIbgeId)
+    public function getCitiesByState(String $stateIbge)
     {
-        $uri = env('IBGE_REST_INTEGRATION_HOST', 'http://servicodados.ibge.gov.br/api/v1/') . "/localidades/estados/{$stateIbgeId}/municipios";
-        $request = Http::get($uri);
+        $uri = $this->getUriCities($stateIbge);
 
-        return $request->json();
+        try {
+            $request = Http::get($uri);
+            return $request->json();
+        }
+        catch (HttpException $e){
+            return $e->getMessage();
+        }
     }
 }

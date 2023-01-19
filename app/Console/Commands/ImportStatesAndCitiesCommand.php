@@ -106,19 +106,19 @@ class ImportStatesAndCitiesCommand extends Command
             $this->newLine();
 
             $totalCreated = $totalUpdated = 0;
-            $cities = $this->ibgeService->getCitiesByState($state->ibge_id);
+            $cities = $this->ibgeService->getCitiesByState($state->acronym);
             $this->output->progressStart(count($cities));
 
             foreach ($cities as $value) {
                 $this->output->progressAdvance();
 
                 $dataCity = [
-                    'ibge_id' => $value['id'],
+                    'ibge_id' => $value['id'] ?? $value['codigo_ibge'],
                     'name' => $value['nome'],
                     'state_id' => $state->id,
                 ];
 
-                if (!$city = City::where('ibge_id', $value['id'])->first()) {
+                if (!$city = City::where('ibge_id', $value['id'] ?? $value['codigo_ibge'])->first()) {
                     City::create($dataCity);
                     $totalCreated++;
                     continue;
