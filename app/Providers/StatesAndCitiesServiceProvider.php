@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\ImportStatesAndCitiesCommand;
 use Illuminate\Support\ServiceProvider;
-use Kayo\StatesAndCitiesIbge\Services\Integration\IbgeRestIntegrationService;
+use App\Services\Integration\IbgeRestIntegrationService;
 
 class StatesAndCitiesServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,11 @@ class StatesAndCitiesServiceProvider extends ServiceProvider
 
     private function registerCommands()
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ImportStatesAndCitiesCommand::class,
+            ]);
+        }
     }
 
     private function publishConfig()

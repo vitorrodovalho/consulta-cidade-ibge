@@ -1,9 +1,8 @@
 <?php
 
-namespace Kayo\StatesAndCitiesIbge\Services\Integration;
+namespace App\Services\Integration;
 
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\Http;
 
 class IbgeRestIntegrationService extends BaseRestIntegrationService
 {
@@ -11,15 +10,13 @@ class IbgeRestIntegrationService extends BaseRestIntegrationService
      * Retorna todos os estados brasileiros
      *
      * @return array
-     * @throws GuzzleException
      */
     public function getStates()
     {
-        $uri = $this->getBaseUri() . '/localidades/estados';
-        $request = new Request('GET', $uri);
-        $response = $this->proxy($request);
+        $uri = env('IBGE_REST_INTEGRATION_HOST', 'http://servicodados.ibge.gov.br/api/v1/') . '/localidades/estados';
+        $request = Http::get($uri);
 
-        return $response['data'];
+        return $request->json();
     }
 
     /**
@@ -27,14 +24,12 @@ class IbgeRestIntegrationService extends BaseRestIntegrationService
      *
      * @param int $stateIbgeId
      * @return mixed
-     * @throws GuzzleException
      */
     public function getCitiesByState(int $stateIbgeId)
     {
-        $uri = $this->getBaseUri() . "/localidades/estados/{$stateIbgeId}/municipios";
-        $request = new Request('GET', $uri);
-        $response = $this->proxy($request, ['orderBy' => 'nome']);
+        $uri = env('IBGE_REST_INTEGRATION_HOST', 'http://servicodados.ibge.gov.br/api/v1/') . "/localidades/estados/{$stateIbgeId}/municipios";
+        $request = Http::get($uri);
 
-        return $response['data'];
+        return $request->json();
     }
 }

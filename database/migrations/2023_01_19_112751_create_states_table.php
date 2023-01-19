@@ -14,10 +14,13 @@ class CreateStatesTable extends Migration
     public function up()
     {
         Schema::create('states', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('state_id');
+            $table->id();
             $table->unsignedBigInteger('ibge_id')->nullable();
+            $table->unsignedBigInteger('ibge_region_id')->nullable();
             $table->string('name');
+            $table->string('acronym');
+            $table->string('region_name')->nullable();
+            $table->string('region_acronym')->nullable();
             $table->timestamps();
         });
     }

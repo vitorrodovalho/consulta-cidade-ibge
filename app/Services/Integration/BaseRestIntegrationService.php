@@ -1,6 +1,6 @@
 <?php
 
-namespace Kayo\StatesAndCitiesIbge\Services\Integration;
+namespace App\Services\Integration;
 
 use Exception;
 use GuzzleHttp\Client;
