@@ -51,7 +51,7 @@ class ImportStatesAndCitiesCommand extends Command
     {
         try {
             $this->importStates();
-            //$this->importCities();
+            $this->importCities();
         } catch (ServiceUnavailableHttpException | \Exception $e) {
             $this->error('Error: ' . $e->getMessage());
         }

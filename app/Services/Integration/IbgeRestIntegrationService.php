@@ -4,7 +4,7 @@ namespace App\Services\Integration;
 
 use Illuminate\Support\Facades\Http;
 
-class IbgeRestIntegrationService extends BaseRestIntegrationService
+class IbgeRestIntegrationService
 {
     /**
      * Retorna todos os estados brasileiros

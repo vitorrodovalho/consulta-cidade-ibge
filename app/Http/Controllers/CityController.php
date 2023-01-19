@@ -8,57 +8,15 @@ use Illuminate\Http\Request;
 class CityController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Exibe e consulta todos municipios do estado passado como referencia
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($state)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\City  $city
-     * @return \Illuminate\Http\Response
-     */
-    public function show(City $city)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\City  $city
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, City $city)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\City  $city
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(City $city)
-    {
-        //
+        return City::select('cities.name', 'cities.ibge_id as ibge_code')
+            ->where('acronym', $state)
+            ->join('states', 'states.id', '=', 'state_id')
+            ->paginate();
     }
 }
