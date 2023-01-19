@@ -7,11 +7,23 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class IbgeRestIntegrationService
 {
+    /**
+     * Obtem url de destino endpoint get estados integração
+     *
+     * @param String $state
+     * @return String
+     */
     public function getUriStates(): string
     {
         return config('ibge.integration.host') . config('ibge.integration.states');
     }
 
+    /**
+     * Obtem url de destino endpoint get cidades integração
+     *
+     * @param String $state
+     * @return String
+     */
     public function getUriCities($state): string
     {
         return config('ibge.integration.host') . config('ibge.integration.prefix') . "/" . $state . config('ibge.integration.cities');
@@ -25,8 +37,6 @@ class IbgeRestIntegrationService
     {
         $uri = $this->getUriStates();
 
-        echo $uri;
-
         try {
             $request = Http::get($uri);
             return $request->json();
@@ -39,8 +49,7 @@ class IbgeRestIntegrationService
     /**
      * Retorna todas as cidades de um determinado estado brasileiro
      *
-     * @param int $stateIbgeId
-     * @return mixed
+     * @param String $stateIbge
      */
     public function getCitiesByState(String $stateIbge)
     {

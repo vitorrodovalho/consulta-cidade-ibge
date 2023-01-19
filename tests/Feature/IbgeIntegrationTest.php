@@ -16,10 +16,11 @@ class IbgeIntegrationTest extends TestCase
     {
         $ibgeIntegration = new IbgeRestIntegrationService();
 
-        $response = $this->withHeaders($this->headerJson)->getJson($ibgeIntegration->getUriStates());
-        $response->assertStatus(200);
+        $result = $ibgeIntegration->getStates();
+        self::assertArrayHasKey('nome', $result[0]);
+        self::assertArrayHasKey('sigla', $result[0]);
 
-        $response = $this->getJson($ibgeIntegration->getUriCities("SP"));
-        $response->assertStatus(200);
+        $result = $ibgeIntegration->getCitiesByState("SP");
+        self::assertArrayHasKey('nome', $result[0]);
     }
 }

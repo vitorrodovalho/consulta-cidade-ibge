@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\getCitiesRequest;
 use App\Models\City;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -11,10 +13,15 @@ class CityController extends Controller
     /**
      * Exibe e consulta todos municipios do estado passado como referencia
      *
-     * @return
+     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $state)
+    public function index(getCitiesRequest $request, $state)
     {
+        // Valida o estado passado como referencia
+        if(State::where('acronym', $state)->first() == null) {
+            return response(['message' => 'UF estado informado inválido'], 404);
+        }
+
         if ($request->has('page'))
             $page = $request->page;
         else
@@ -33,12 +40,12 @@ class CityController extends Controller
             });
 
             $qb->join('states', 'states.id', '=', 'state_id');
-            return $qb->paginate();
+            return response($qb->paginate());
         }
         else {
             return Cache::remember($key, $expiration, function () use ($state, $request, $qb) {
                 $qb->join('states', 'states.id', '=', 'state_id');
-                return $qb->paginate();
+                return response($qb->paginate());
             });
         }
     }
